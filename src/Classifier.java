@@ -4,7 +4,7 @@ import java.util.List;
 public abstract class Classifier {
     protected int[] labels;
     protected List<int[][]> images;
-    protected ArrayList<double[]> weight;
+    protected ArrayList<double[]> weight = new ArrayList<>();
     public Classifier(int[] labels, List<int[][]> images) {
         this.labels = labels;
         this.images = images;
