@@ -6,5 +6,8 @@ public class Main {
     public static void main(String[] args) {
         int[] labels = MnistReader.getLabels(TRAIN_LABELS_ADDRESS);
         List<int[][]> images = MnistReader.getImages(TRAIN_IMAGES_ADDRESS);
+        Perceptron perceptron = new Perceptron(labels, images);
+        perceptron.train();
+        perceptron.printWeights();
     }
 }
