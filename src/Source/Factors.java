@@ -1,5 +1,8 @@
 package Source;
 
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+
 import java.util.AbstractMap;
 import java.util.LinkedList;
 import java.util.Queue;
@@ -17,7 +20,7 @@ public class Factors {
     private int[][] image;
     private int height, width;
 
-    public Factors(int[][] image) {
+    public Factors(@NotNull int[][] image) {
         this.image = image;
         height = image.length;
         width = image[0].length;
@@ -27,7 +30,17 @@ public class Factors {
         double result;
         factors[0] = 1;
         int i = 1;
-        result = topDownRatio();
+        result = topBottomRatio();
+        factors[i++] = result;
+        result = leftRightRatio();
+        factors[i++] = result;
+        result = colorChange();
+        factors[i++] = result;
+        result = topBottomRatio();
+        factors[i++] = result;
+        result = ratioOfPixelsUnderSecondaryDiagonal();
+        factors[i++] = result;
+        result = numberOfRings();
         factors[i++] = result;
     }
 
@@ -37,12 +50,38 @@ public class Factors {
     }
     // TODO: 09/06/2019 Implement all factors
 
-    private double topDownRatio() {
-        // TODO: 09/06/2019 Implement
-        return 1;
+    @Contract(pure = true)
+    private double topBottomRatio() {
+        int topPixels = 0, bottomPixels = 0;
+        for (int i = 0; i < height; i++)
+            for (int j = 0; j < width; j++)
+                if(image[i][j] > 0)
+                {
+                    if (i < height / 2)
+                        topPixels++;
+                    else bottomPixels++;
+                }
+        if (bottomPixels == 0) bottomPixels = 1;
+        return topPixels / (1.0 * bottomPixels);
+    }
+
+    @Contract(pure = true)
+    private double leftRightRatio() {
+        int leftPixels = 0, rightPixels = 0;
+        for (int i = 0; i < height; i++)
+            for (int j = 0; j < width; j++)
+                if(image[i][j] > 0)
+                {
+                    if (j < width / 2)
+                        leftPixels++;
+                    else rightPixels++;
+                }
+        if (rightPixels == 0) rightPixels = 1;
+        return leftPixels / (1.0 * rightPixels);
     }
 
     //Calculate color change of consecutive pixels
+    @Contract(pure = true)
     private double colorChange() {
         double ret = 0;
         int differenceSum = 0;
@@ -58,6 +97,7 @@ public class Factors {
         return ret;
     }
 
+    @Contract(pure = true)
     private double ratioOfPixelsUnderSecondaryDiagonal() {
         int pixelCount = 0, underDiagonalPixelCount = 0;
         for (int i = 0; i < height; i++)
@@ -74,6 +114,8 @@ public class Factors {
         return underDiagonalPixelCount / (1.0 * pixelCount);
     }
 
+    @NotNull
+    @Contract(" -> new")
     private IntPair findCenterOfMass() {
         double sumOfPoints = 0, weightedSumX = 0, weightedSumY = 0;
         for (int i = 0; i < height; i++)

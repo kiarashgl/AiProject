@@ -37,12 +37,14 @@ public class Perceptron extends Classifier {
 
     @Override
     public void train() {
+        int labelsCnt[] = new int[10];
         boolean changed = false;
         do
         {
             changed = false;
             for (int image = 0; image < numberOfImages; image++)
             {
+                labelsCnt[labels[image]]++;
                 Factors factors = new Factors(images.get(image));
                 Label decidedLabel = decideLabel(factors);
                 if (decidedLabel.ordinal() != labels[image])
@@ -50,6 +52,17 @@ public class Perceptron extends Classifier {
                     changed = true;
                     addToWeight(decidedLabel.ordinal(), factors.getFactors(), -1);
                     addToWeight(labels[image], factors.getFactors(), 1);
+                }
+                if (image % 1000 == 0)
+                {
+                    for (int i = 0; i < labelsCnt.length; i++)
+                    {
+                        System.out.printf("%d : %d|", i, labelsCnt[i]);
+                        for (int j = 0; j < weight.get(i).length; j++)
+                            System.out.printf("%f ", weight.get(i)[j]);
+                        System.out.println();
+                    }
+                    System.out.println("salam");
                 }
             }
         } while (changed);
