@@ -27,6 +27,7 @@ public class Factors {
         return 1;
     }
 
+    //Calculate color change of consecutive pixels
     private double colorChange() {
         double ret = 0;
         int differenceSum = 0;
@@ -40,5 +41,22 @@ public class Factors {
                     differenceSum += Math.abs(image[i][j] - image[i + 1][j]);
         ret = differenceSum / (1.0 * (width - 1) * (height) + (width - 1) * height);
         return ret;
+    }
+
+    private double ratioOfPixelsUnderSecondaryDiagonal()
+    {
+        int pixelCount = 0, underDiagonalPixelCount = 0;
+        for (int i = 0; i < height; i++)
+            for (int j = 0; j < width; j++)
+            {
+                if (image[i][j] > 0)
+                {
+                    pixelCount++;
+                    if(j >= width - i - 1)
+                        underDiagonalPixelCount++;
+                }
+            }
+        if (pixelCount == 0) pixelCount = 1;
+        return underDiagonalPixelCount / (1.0 * pixelCount);
     }
 }
