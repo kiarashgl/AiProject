@@ -1,3 +1,5 @@
+package Source;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,7 +20,10 @@ public abstract class Classifier {
     public void printWeights() {
         for (int i = 0; i < weight.size(); i++)
         {
-
+            double[] factors = weight.get(i);
+            System.out.printf("Factor #%d :\n", i);
+            for (int ind = 0; ind < factors.length; ind++)
+                System.out.println("factor " + ind + " = " + factors[i]);
         }
     }
 }

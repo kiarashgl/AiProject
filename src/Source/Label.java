@@ -1,3 +1,5 @@
+package Source;
+
 public enum Label {
     TSHIRT_TOP, TROUSER, PULLOVER, DRESS, COAT, SANDAL, SHIRT, SNEAKER, BAG, ANKLE_BOOT;
 }

@@ -1,20 +1,26 @@
+package Source;
+
 import java.util.AbstractMap;
 import java.util.LinkedList;
 import java.util.Queue;
 
 public class Factors {
-    class IntPair extends AbstractMap.SimpleEntry<Integer, Integer>{
+    class IntPair extends AbstractMap.SimpleEntry<Integer, Integer> {
         public IntPair(Integer key, Integer value) {
             super(key, value);
         }
-    };
+    }
+
+    ;
     public static final int NUMBER_OF_FACTORS = 10;
     private double[] factors = new double[NUMBER_OF_FACTORS];
     private int[][] image;
-    private int height = image.length, width = image[0].length;
+    private int height, width;
 
     public Factors(int[][] image) {
         this.image = image;
+        height = image.length;
+        width = image[0].length;
     }
 
     private void calcFactors() {
@@ -52,8 +58,7 @@ public class Factors {
         return ret;
     }
 
-    private double ratioOfPixelsUnderSecondaryDiagonal()
-    {
+    private double ratioOfPixelsUnderSecondaryDiagonal() {
         int pixelCount = 0, underDiagonalPixelCount = 0;
         for (int i = 0; i < height; i++)
             for (int j = 0; j < width; j++)
@@ -61,7 +66,7 @@ public class Factors {
                 if (image[i][j] > 0)
                 {
                     pixelCount++;
-                    if(j >= width - i - 1)
+                    if (j >= width - i - 1)
                         underDiagonalPixelCount++;
                 }
             }
@@ -69,8 +74,7 @@ public class Factors {
         return underDiagonalPixelCount / (1.0 * pixelCount);
     }
 
-    private IntPair findCenterOfMass()
-    {
+    private IntPair findCenterOfMass() {
         double sumOfPoints = 0, weightedSumX = 0, weightedSumY = 0;
         for (int i = 0; i < height; i++)
             for (int j = 0; j < width; j++)
@@ -81,15 +85,15 @@ public class Factors {
             }
         weightedSumX /= sumOfPoints;
         weightedSumY /= sumOfPoints;
-        return new IntPair((int)weightedSumX,(int)weightedSumY);
+        return new IntPair((int) weightedSumX, (int) weightedSumY);
     }
-    private double numberOfRings()
-    {
+
+    public int numberOfRings() {
         double[][] copyImage = new double[height][width];
-        for(int i = 0; i < height; i++)
+        for (int i = 0; i < height; i++)
             for (int j = 0; j < width; j++)
                 copyImage[i][j] = image[i][j];
-        int[] dx = {1, 0, -1, 0}, dy = {0,  1 , 0, -1};
+        int[] dx = {1, 0, -1, 0}, dy = {0, 1, 0, -1};
         int rings = 0;
 
         Queue<IntPair> queue = new LinkedList<>();
@@ -99,7 +103,7 @@ public class Factors {
                 {
                     rings++;
                     queue.clear();
-                    queue.add(new IntPair(i,j));
+                    queue.add(new IntPair(i, j));
                     while (!queue.isEmpty())
                     {
                         IntPair cur = queue.poll();
