@@ -2,7 +2,8 @@ import java.util.List;
 
 public class Perceptron extends Classifier {
     private int numberOfImages;
-//    private static final int NUMBER_OF_TRAINS = 1000 * 1000 * 1000;
+
+    //    private static final int NUMBER_OF_TRAINS = 1000 * 1000 * 1000;
     public Perceptron(int[] labels, List<int[][]> images) {
         super(labels, images);
         numberOfImages = images.size();
@@ -10,11 +11,11 @@ public class Perceptron extends Classifier {
             weight.add(new double[Factors.NUMBER_OF_FACTORS]);
     }
 
-    private Label decideLabel(Factors factors)
-    {
+    private Label decideLabel(Factors factors) {
         double maxDotProduct = Double.MIN_VALUE, dotProduct = 0;
         Label ret = Label.TSHIRT_TOP;
-        for (Label label : Label.values()) {
+        for (Label label : Label.values())
+        {
             for (int i = 0; i < Factors.NUMBER_OF_FACTORS; i++)
                 dotProduct += weight.get(label.ordinal())[i] * factors.getFactors()[i];
             if (dotProduct > maxDotProduct)
@@ -35,9 +36,10 @@ public class Perceptron extends Classifier {
     @Override
     public void train() {
         boolean changed = false;
-        do {
+        do
+        {
             changed = false;
-            for(int image = 0; image < numberOfImages; image++)
+            for (int image = 0; image < numberOfImages; image++)
             {
                 Factors factors = new Factors(images.get(image));
                 Label decidedLabel = decideLabel(factors);
@@ -48,8 +50,9 @@ public class Perceptron extends Classifier {
                     addToWeight(labels[image], factors.getFactors(), 1);
                 }
             }
-        } while(changed);
+        } while (changed);
     }
+
     // adds factor array multiplicated by coefficient to weight of the specified label.
     private void addToWeight(int label, double[] factors, int coeff) {
         for (int i = 0; i < Factors.NUMBER_OF_FACTORS; i++)
