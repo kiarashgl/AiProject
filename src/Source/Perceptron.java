@@ -9,8 +9,6 @@ public class Perceptron extends Classifier {
     public Perceptron(int[] labels, List<int[][]> images) {
         super(labels, images);
         numberOfImages = images.size();
-        for (int i = 0; i < Label.values().length; i++)
-            weight.add(new double[Factors.NUMBER_OF_FACTORS]);
     }
 
     private Label decideLabel(Factors factors) {
@@ -19,7 +17,10 @@ public class Perceptron extends Classifier {
         for (Label label : Label.values())
         {
             for (int i = 0; i < Factors.NUMBER_OF_FACTORS; i++)
-                dotProduct += weight.get(label.ordinal())[i] * factors.getFactors()[i];
+            {
+                double[] doubleFactors = factors.getFactors();
+                dotProduct += weight.get(label.ordinal())[i] * doubleFactors[i];
+            }
             if (dotProduct > maxDotProduct)
             {
                 maxDotProduct = dotProduct;
@@ -37,34 +38,43 @@ public class Perceptron extends Classifier {
 
     @Override
     public void train() {
-        int labelsCnt[] = new int[10];
+        int[] wrongLabelsCnt = new int[10];
+        Factors[] factorsList = new Factors[numberOfImages];
+        for (int image = 0; image < numberOfImages; image++)
+        {
+            factorsList[image] = new Factors(images.get(image));
+            factorsList[image].getFactors();
+        }
         boolean changed = false;
         do
         {
             changed = false;
+            for (int i = 0; i < wrongLabelsCnt.length; i++)
+                wrongLabelsCnt[i] = 0;
+            int wrongCnt = 0;
             for (int image = 0; image < numberOfImages; image++)
             {
-                labelsCnt[labels[image]]++;
-                Factors factors = new Factors(images.get(image));
-                Label decidedLabel = decideLabel(factors);
+                Label decidedLabel = decideLabel(factorsList[image]);
                 if (decidedLabel.ordinal() != labels[image])
                 {
+                    wrongCnt++;
+                    wrongLabelsCnt[decidedLabel.ordinal()]++;
                     changed = true;
-                    addToWeight(decidedLabel.ordinal(), factors.getFactors(), -1);
-                    addToWeight(labels[image], factors.getFactors(), 1);
-                }
-                if (image % 1000 == 0)
-                {
-                    for (int i = 0; i < labelsCnt.length; i++)
-                    {
-                        System.out.printf("%d : %d|", i, labelsCnt[i]);
-                        for (int j = 0; j < weight.get(i).length; j++)
-                            System.out.printf("%f ", weight.get(i)[j]);
-                        System.out.println();
-                    }
-                    System.out.println("salam");
+                    addToWeight(decidedLabel.ordinal(), factorsList[image].getFactors(), -1);
+                    addToWeight(labels[image], factorsList[image].getFactors(), 1);
                 }
             }
+            System.out.println("Wrong decisions: " + wrongCnt);
+            for (int i = 0; i < wrongLabelsCnt.length; i++)
+                System.out.println("label " + i + " wrongs :" +wrongLabelsCnt[i]);
+
+            /*for (int i = 0; i < weight.size(); i++)
+            {
+                System.out.printf("%d |", i);
+                for (int j = 0; j < weight.get(i).length; j++)
+                    System.out.printf("%f ", weight.get(i)[j]);
+                System.out.println();
+            }*/
         } while (changed);
     }
 

@@ -19,7 +19,7 @@ public class Factors {
     private double[] factors = new double[NUMBER_OF_FACTORS];
     private int[][] image;
     private int height, width;
-
+    private boolean factorsCalculated = false;
     public Factors(@NotNull int[][] image) {
         this.image = image;
         height = image.length;
@@ -42,10 +42,12 @@ public class Factors {
         factors[i++] = result;
         result = numberOfRings();
         factors[i++] = result;
+        factorsCalculated = true;
     }
 
     public double[] getFactors() {
-        calcFactors();
+        if (!factorsCalculated)
+            calcFactors();
         return factors;
     }
     // TODO: 09/06/2019 Implement all factors

@@ -11,6 +11,8 @@ public abstract class Classifier {
     public Classifier(int[] labels, List<int[][]> images) {
         this.labels = labels;
         this.images = images;
+        for (int i = 0; i < Label.values().length; i++)
+            weight.add(new double[Factors.NUMBER_OF_FACTORS]);
     }
 
     abstract public void train();

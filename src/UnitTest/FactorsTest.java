@@ -1,4 +1,4 @@
-package Test;
+package UnitTest;
 
 import Source.Factors;
 import org.junit.Assert;
