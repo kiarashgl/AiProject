@@ -1,7 +1,7 @@
 package Source;
 
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
+//import org.jetbrains.annotations.Contract;
+//import org.jetbrains.annotations.NotNull;
 
 import java.util.AbstractMap;
 import java.util.LinkedList;
@@ -20,7 +20,7 @@ public class Factors {
     private int[][] image;
     private int height, width;
     private boolean factorsCalculated = false;
-    public Factors(@NotNull int[][] image) {
+    public Factors( int[][] image) {
         this.image = image;
         height = image.length;
         width = image[0].length;
@@ -42,18 +42,25 @@ public class Factors {
                         sum += image[ii][jj];
                 factors[index++] = sum / division;
             }
-   /*     result = topBottomRatio();
-        factors[index++] = result;
-        result = leftRightRatio();
-        factors[index++] = result;
-        result = colorChange();
-        factors[index++] = result;
-        result = topBottomRatio();
-        factors[index++] = result;
-        result = ratioOfPixelsUnderSecondaryDiagonal();
-        factors[index++] = result;
-        result = numberOfRings();
-        factors[index++] = result;*/
+
+//        result = leftRightRatio();
+//        factors[index++] = result;
+//        result = colorChange();
+//        factors[index++] = result;
+//
+//        result = heightwidthRatio();
+//        factors[index++] = result;
+//        result = hasMoreBackgroundPixels();
+//        factors[index++] = result;
+//        result = backgroundColorNumber();
+//        factors[index++] = result;
+//
+//        result = topBottomRatio();
+//        factors[index++] = result;
+//        result = ratioOfPixelsUnderSecondaryDiagonal();
+//        factors[index++] = result;
+//        result = numberOfRings();
+//        factors[index++] = result;
     }
 
     public double[] getFactors() {
@@ -75,6 +82,68 @@ public class Factors {
                 }
         if (bottomPixels == 0) bottomPixels = 1;
         return topPixels / (1.0 * bottomPixels);
+    }
+
+    private double heightwidthRatio() {
+        int h = 0, w = 0;
+        int minHeight = 0, maxHeight= 0, minWidth= 0, maxWidth= 0;
+
+        for (int i = 0; i < height; i++)
+            for (int j = 0; j < width; j++)
+                if (image[i][j] > 0)
+                   minHeight = i;
+
+        for (int i = 0; i < width; i++)
+            for (int j = 0; j < height; j++)
+                if (image[j][i] > 0)
+                    minWidth = i;
+
+        for (int i = height - 1; i >= 0; i--)
+            for (int j = 0; j < width; j++)
+                if (image[i][j] > 0)
+                    maxHeight = i;
+
+        for (int i = width - 1; i >= 0; i--)
+            for (int j = 0; j < height; j++)
+                if (image[j][i] > 0)
+                    maxWidth = i;
+
+        h = maxHeight - minHeight;
+        w = maxWidth - minWidth;
+
+        if (w == 0) w = 1;
+        return h / (1.0 * w);
+    }
+
+    private double backgroundColorNumber() {
+        int start = height / 3, end = 2 * height / 3 , sum = 0;
+        for (int i = start; i <= end; i++)
+            for (int j = 0; j < width; ){
+                while (image[i][j] > 0)
+                    j++;
+
+                if (image[i][j] == 0){
+                    sum++;
+                    while (image[i][j] == 0)
+                        j++;
+                }
+
+            }
+
+        return 1.0 * sum / (end - start +1);
+    }
+
+    private double hasMoreBackgroundPixels() {
+        int pixels = 0;
+        for (int i = 0; i < height; i++)
+            for (int j = 0; j < width; j++)
+                if(image[i][j] > 0)
+                {
+                    pixels++;
+                }
+        if (pixels > (height* width / 2.0) )
+            return -1;
+        else return 1;
     }
 
     private double leftRightRatio() {
@@ -123,7 +192,7 @@ public class Factors {
         return underDiagonalPixelCount / (1.0 * pixelCount);
     }
 
-    @NotNull
+
     private IntPair findCenterOfMass() {
         double sumOfPoints = 0, weightedSumX = 0, weightedSumY = 0;
         for (int i = 0; i < height; i++)
