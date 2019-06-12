@@ -14,12 +14,12 @@ public class Factors {
         }
     }
 
-    ;
-    public static final int NUMBER_OF_FACTORS = 10;
+    // FIXME: Change this parameter when changing factors; otherwise it doesn't work properly.
+    public static final int NUMBER_OF_FACTORS = 28*28 + 1;
     private double[] factors = new double[NUMBER_OF_FACTORS];
     private int[][] image;
     private int height, width;
-
+    private boolean factorsCalculated = false;
     public Factors(@NotNull int[][] image) {
         this.image = image;
         height = image.length;
@@ -27,30 +27,42 @@ public class Factors {
     }
 
     private void calcFactors() {
+        //This divisions are there to simplify the process of dividing the picture to parts
+        factorsCalculated = true;
         double result;
         factors[0] = 1;
-        int i = 1;
-        result = topBottomRatio();
-        factors[i++] = result;
+        int index = 1;
+        final int division = 1;
+        for (int i = 0; i < height / division; i++)
+            for (int j = 0; j < width / division; j++)
+            {
+                int sum = 0;
+                for (int ii = i * division; ii < (i+1) * division; ii++)
+                    for (int jj = j * division; jj < (j+1) * division; jj++)
+                        sum += image[ii][jj];
+                factors[index++] = sum / division;
+            }
+   /*     result = topBottomRatio();
+        factors[index++] = result;
         result = leftRightRatio();
-        factors[i++] = result;
+        factors[index++] = result;
         result = colorChange();
-        factors[i++] = result;
+        factors[index++] = result;
         result = topBottomRatio();
-        factors[i++] = result;
+        factors[index++] = result;
         result = ratioOfPixelsUnderSecondaryDiagonal();
-        factors[i++] = result;
+        factors[index++] = result;
         result = numberOfRings();
-        factors[i++] = result;
+        factors[index++] = result;*/
     }
 
     public double[] getFactors() {
-        calcFactors();
+        if (!factorsCalculated)
+            calcFactors();
         return factors;
     }
     // TODO: 09/06/2019 Implement all factors
 
-    @Contract(pure = true)
     private double topBottomRatio() {
         int topPixels = 0, bottomPixels = 0;
         for (int i = 0; i < height; i++)
@@ -65,7 +77,6 @@ public class Factors {
         return topPixels / (1.0 * bottomPixels);
     }
 
-    @Contract(pure = true)
     private double leftRightRatio() {
         int leftPixels = 0, rightPixels = 0;
         for (int i = 0; i < height; i++)
@@ -81,7 +92,6 @@ public class Factors {
     }
 
     //Calculate color change of consecutive pixels
-    @Contract(pure = true)
     private double colorChange() {
         double ret = 0;
         int differenceSum = 0;
@@ -97,7 +107,6 @@ public class Factors {
         return ret;
     }
 
-    @Contract(pure = true)
     private double ratioOfPixelsUnderSecondaryDiagonal() {
         int pixelCount = 0, underDiagonalPixelCount = 0;
         for (int i = 0; i < height; i++)
@@ -115,7 +124,6 @@ public class Factors {
     }
 
     @NotNull
-    @Contract(" -> new")
     private IntPair findCenterOfMass() {
         double sumOfPoints = 0, weightedSumX = 0, weightedSumY = 0;
         for (int i = 0; i < height; i++)
