@@ -3,10 +3,10 @@ package Source;
 import java.util.List;
 
 public class Perceptron extends Classifier {
-    protected int numberOfImages = 60000;
+    protected int numberOfImages = 10000;
     protected Factors[] factorsList = new Factors[numberOfImages];
     protected int maxImageIndex = 0;
-    private static final int NUMBER_OF_TRAINS = 1;
+    private static final int NUMBER_OF_TRAINS = 100;
 
 
     public Perceptron(int[] labels, List<int[][]> images) {
