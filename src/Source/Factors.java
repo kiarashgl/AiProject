@@ -16,7 +16,7 @@ public class Factors {
 
     // FIXME: Change this parameter when changing factors; otherwise it doesn't work properly.
     public static final int NUMBER_OF_FACTORS = 28*28 + 1;
-    private double[] factors = new double[NUMBER_OF_FACTORS];
+    private float[] factors = new float[NUMBER_OF_FACTORS];
     private int[][] image;
     private int height, width;
     private boolean factorsCalculated = false;
@@ -29,7 +29,7 @@ public class Factors {
     private void calcFactors() {
         //This divisions are there to simplify the process of dividing the picture to parts
         factorsCalculated = true;
-        double result;
+        float result;
         factors[0] = 1;
         int index = 1;
         final int division = 1;
@@ -63,14 +63,14 @@ public class Factors {
 //        factors[index++] = result;
     }
 
-    public double[] getFactors() {
+    public float[] getFactors() {
         if (!factorsCalculated)
             calcFactors();
         return factors;
     }
     // TODO: 09/06/2019 Implement all factors
 
-    private double topBottomRatio() {
+    private float topBottomRatio() {
         int topPixels = 0, bottomPixels = 0;
         for (int i = 0; i < height; i++)
             for (int j = 0; j < width; j++)
@@ -81,10 +81,10 @@ public class Factors {
                     else bottomPixels++;
                 }
         if (bottomPixels == 0) bottomPixels = 1;
-        return topPixels / (1.0 * bottomPixels);
+        return topPixels / (float)(1.0 * bottomPixels);
     }
 
-    private double heightwidthRatio() {
+    private float heightwidthRatio() {
         int h = 0, w = 0;
         int minHeight = 0, maxHeight= 0, minWidth= 0, maxWidth= 0;
 
@@ -112,10 +112,10 @@ public class Factors {
         w = maxWidth - minWidth;
 
         if (w == 0) w = 1;
-        return h / (1.0 * w);
+        return h / (float)(1.0 * w);
     }
 
-    private double backgroundColorNumber() {
+    private float backgroundColorNumber() {
         int start = height / 3, end = 2 * height / 3 , sum = 0;
         for (int i = start; i <= end; i++)
             for (int j = 0; j < width; ){
@@ -130,10 +130,10 @@ public class Factors {
 
             }
 
-        return 1.0 * sum / (end - start +1);
+        return (float)(1.0 * sum) / (float)(end - start +1);
     }
 
-    private double hasMoreBackgroundPixels() {
+    private float hasMoreBackgroundPixels() {
         int pixels = 0;
         for (int i = 0; i < height; i++)
             for (int j = 0; j < width; j++)
@@ -146,7 +146,7 @@ public class Factors {
         else return 1;
     }
 
-    private double leftRightRatio() {
+    private float leftRightRatio() {
         int leftPixels = 0, rightPixels = 0;
         for (int i = 0; i < height; i++)
             for (int j = 0; j < width; j++)
@@ -157,12 +157,12 @@ public class Factors {
                     else rightPixels++;
                 }
         if (rightPixels == 0) rightPixels = 1;
-        return leftPixels / (1.0 * rightPixels);
+        return leftPixels / (float)(1.0 * rightPixels);
     }
 
     //Calculate color change of consecutive pixels
-    private double colorChange() {
-        double ret = 0;
+    private float colorChange() {
+        float ret = 0;
         int differenceSum = 0;
         for (int i = 0; i < height; i++)
             for (int j = 0; j < width - 1; j++)
@@ -172,11 +172,11 @@ public class Factors {
             for (int i = 0; i < height - 1; i++)
                 if (image[i][j] > 0 && image[i + 1][j] > 0)
                     differenceSum += Math.abs(image[i][j] - image[i + 1][j]);
-        ret = differenceSum / (1.0 * (width - 1) * (height) + (width - 1) * height);
+        ret = differenceSum / (float)(1.0 * (width - 1) * (height) + (width - 1) * height);
         return ret;
     }
 
-    private double ratioOfPixelsUnderSecondaryDiagonal() {
+    private float ratioOfPixelsUnderSecondaryDiagonal() {
         int pixelCount = 0, underDiagonalPixelCount = 0;
         for (int i = 0; i < height; i++)
             for (int j = 0; j < width; j++)
@@ -189,12 +189,12 @@ public class Factors {
                 }
             }
         if (pixelCount == 0) pixelCount = 1;
-        return underDiagonalPixelCount / (1.0 * pixelCount);
+        return underDiagonalPixelCount / (float)(1.0 * pixelCount);
     }
 
 
     private IntPair findCenterOfMass() {
-        double sumOfPoints = 0, weightedSumX = 0, weightedSumY = 0;
+        float sumOfPoints = 0, weightedSumX = 0, weightedSumY = 0;
         for (int i = 0; i < height; i++)
             for (int j = 0; j < width; j++)
             {
@@ -208,7 +208,7 @@ public class Factors {
     }
 
     public int numberOfRings() {
-        double[][] copyImage = new double[height][width];
+        float[][] copyImage = new float[height][width];
         for (int i = 0; i < height; i++)
             for (int j = 0; j < width; j++)
                 copyImage[i][j] = image[i][j];

@@ -9,7 +9,7 @@ import java.util.Scanner;
 public abstract class Classifier {
     protected int[] labels;
     protected List<int[][]> images = new LinkedList<>();
-    protected ArrayList<double[]> weight = new ArrayList<>();
+    protected ArrayList<float[]> weight = new ArrayList<>();
 
     public Classifier(int[] labels, List<int[][]> images) {
         this.labels = labels;
@@ -34,7 +34,7 @@ public abstract class Classifier {
             int weightInd = Integer.parseInt(scanner.nextLine().trim().split(" ")[1]);
             for (int j = 0; j < Factors.NUMBER_OF_FACTORS; j++)
             {
-                double weightParameter = Double.parseDouble(scanner.next());
+                float weightParameter = Float.parseFloat(scanner.next());
                 weight.get(weightInd)[j] = weightParameter;
             }
             scanner.nextLine();
@@ -49,7 +49,7 @@ public abstract class Classifier {
     public void printWeights() {
         for (int i = 0; i < weight.size(); i++)
         {
-            double[] factors = weight.get(i);
+            float[] factors = weight.get(i);
             System.out.printf("Factor #%d :\n", i);
             for (int ind = 0; ind < factors.length; ind++)
                 System.out.println("factor " + ind + " = " + factors[ind]);
@@ -69,9 +69,9 @@ public abstract class Classifier {
         printWriter.println(weight.size());
         for (int i = 0; i < weight.size(); i++)
         {
-            double[] factors = weight.get(i);
+            float[] factors = weight.get(i);
             printWriter.printf("Factor %d :\n", i);
-            for (double factor : factors)
+            for (float factor : factors)
                 printWriter.print(factor + " ");
             printWriter.println();
         }

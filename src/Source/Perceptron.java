@@ -20,7 +20,7 @@ public class Perceptron extends Classifier {
     }
     {
         for (int i = 0; i < Label.values().length; i++)
-            weight.add(new double[Factors.NUMBER_OF_FACTORS]);
+            weight.add(new float[Factors.NUMBER_OF_FACTORS]);
     }
 
     public Perceptron(String trainData) {
@@ -28,16 +28,16 @@ public class Perceptron extends Classifier {
     }
 
     protected Label decideLabel(Factors factors) {
-        double maxDotProduct = 0, dotProduct = 0;
+        float maxDotProduct = 0, dotProduct = 0;
         Label ret = null;
         boolean first = true;
-        double[] doubleFactors = factors.getFactors();
+        float[] floatFactors = factors.getFactors();
 
         for (Label label : Label.values())
         {
             dotProduct = 0;
             for (int i = 0; i < Factors.NUMBER_OF_FACTORS; i++)
-                dotProduct += weight.get(label.ordinal())[i] * doubleFactors[i];
+                dotProduct += weight.get(label.ordinal())[i] * floatFactors[i];
             if (first || dotProduct > maxDotProduct)
             {
                 maxDotProduct = dotProduct;
@@ -79,7 +79,7 @@ public class Perceptron extends Classifier {
                     changed = true;
                     updateWeights(image, decidedLabel);
                 }
-                if (image %10 == 0 )
+                if (image %1000 == 0 )
                     System.out.println(image);
             }
             System.out.println("Wrong decisions: " + wrongCnt);
@@ -103,7 +103,7 @@ public class Perceptron extends Classifier {
     }
 
     // adds factor array multiplicated by coefficient to weight of the specified label.
-    protected void addToWeight(int label, double[] factors, int coeff) {
+    protected void addToWeight(int label, float[] factors, int coeff) {
         for (int i = 0; i < Factors.NUMBER_OF_FACTORS; i++)
             weight.get(label)[i] += coeff * factors[i];
     }

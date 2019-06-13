@@ -3,12 +3,12 @@ package Source;
 import java.util.List;
 
 public class KernelizedPerceptron extends Perceptron {
-    //    double[][] kernelList = new double[numberOfImages][numberOfImages];
+    //    float[][] kernelList = new float[numberOfImages][numberOfImages];
     public KernelizedPerceptron(int[] labels, List<int[][]> images) {
         super(labels, images);
         weight.clear();
         for (int i = 0; i < Label.values().length; i++)
-            weight.add(new double[numberOfImages]);
+            weight.add(new float[numberOfImages]);
         //        for (int i = 0; i < numberOfImages; i++)
         //            for (int j = 0; j < numberOfImages; j++)
         //                kernelList[i][j] = kernel(factorsList[i], factorsList[j]);
@@ -19,18 +19,18 @@ public class KernelizedPerceptron extends Perceptron {
         super(trainData);
     }
 
-    private double kernel(int iFactorIndex, int testFactorIndex) {
-        double ret = 0;
-        double[] iFactorDouble = factorsList[iFactorIndex].getFactors(),
-                testFactorDouble = factorsList[testFactorIndex].getFactors();
+    private float kernel(int iFactorIndex, int testFactorIndex) {
+        float ret = 0;
+        float[] iFactorFloat = factorsList[iFactorIndex].getFactors(),
+                testFactorFloat = factorsList[testFactorIndex].getFactors();
         for (int i = 0; i < Factors.NUMBER_OF_FACTORS; i++)
-            ret += iFactorDouble[i] * testFactorDouble[i];
-        return ret;
+            ret += iFactorFloat[i] * testFactorFloat[i];
+        return (ret + 1) * (ret + 1);
     }
 
     @Override
     protected Label decideLabel(int factorsIndex) {
-        double maxDotProduct = 0, dotProduct = 0;
+        float maxDotProduct = 0, dotProduct = 0;
         Label ret = null;
         boolean first = true;
 
@@ -39,7 +39,7 @@ public class KernelizedPerceptron extends Perceptron {
             dotProduct = 0;
             for (int image = 0; image <= maxImageIndex; image++)
             {
-                double alpha = weight.get(label.ordinal())[image];
+                float alpha = weight.get(label.ordinal())[image];
                 if (alpha != 0)
                     dotProduct += weight.get(label.ordinal())[image] * kernel(image, factorsIndex);
             }
