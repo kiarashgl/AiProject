@@ -10,10 +10,7 @@ public abstract class Classifier {
     protected int[] labels;
     protected List<int[][]> images = new LinkedList<>();
     protected ArrayList<double[]> weight = new ArrayList<>();
-    {
-        for (int i = 0; i < Label.values().length; i++)
-            weight.add(new double[Factors.NUMBER_OF_FACTORS]);
-    }
+
     public Classifier(int[] labels, List<int[][]> images) {
         this.labels = labels;
         this.images = images;

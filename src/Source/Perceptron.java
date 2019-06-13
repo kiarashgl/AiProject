@@ -3,31 +3,41 @@ package Source;
 import java.util.List;
 
 public class Perceptron extends Classifier {
-    private int numberOfImages;
+    protected int numberOfImages = 60000;
+    protected Factors[] factorsList = new Factors[numberOfImages];
+    protected int maxImageIndex = 0;
+    private static final int NUMBER_OF_TRAINS = 1;
 
-        private static final int NUMBER_OF_TRAINS = 200;
+
     public Perceptron(int[] labels, List<int[][]> images) {
         super(labels, images);
-        numberOfImages = images.size();
-        numberOfImages = 60000;
+
+        for (int image = 0; image < numberOfImages; image++)
+        {
+            factorsList[image] = new Factors(images.get(image));
+            factorsList[image].getFactors();
+        }
+    }
+    {
+        for (int i = 0; i < Label.values().length; i++)
+            weight.add(new double[Factors.NUMBER_OF_FACTORS]);
     }
 
     public Perceptron(String trainData) {
         super(trainData);
     }
 
-    private Label decideLabel(Factors factors) {
+    protected Label decideLabel(Factors factors) {
         double maxDotProduct = 0, dotProduct = 0;
         Label ret = null;
         boolean first = true;
+        double[] doubleFactors = factors.getFactors();
+
         for (Label label : Label.values())
         {
             dotProduct = 0;
             for (int i = 0; i < Factors.NUMBER_OF_FACTORS; i++)
-            {
-                double[] doubleFactors = factors.getFactors();
                 dotProduct += weight.get(label.ordinal())[i] * doubleFactors[i];
-            }
             if (first || dotProduct > maxDotProduct)
             {
                 maxDotProduct = dotProduct;
@@ -37,7 +47,10 @@ public class Perceptron extends Classifier {
         }
         return ret;
     }
-
+    protected Label decideLabel(int factorIndex)
+    {
+        return decideLabel(factorsList[factorIndex]);
+    }
     @Override
     public Label test(int[][] image) {
         Factors factors = new Factors(image);
@@ -46,31 +59,28 @@ public class Perceptron extends Classifier {
 
     @Override
     public void train() {
-        int[] wrongLabelsCnt = new int[10];
-        Factors[] factorsList = new Factors[numberOfImages];
-        for (int image = 0; image < numberOfImages; image++)
-        {
-            factorsList[image] = new Factors(images.get(image));
-            factorsList[image].getFactors();
-        }
+//        int[] wrongLabelsCnt = new int[10];
+
         boolean changed = true;
         for (int train = 0; train < NUMBER_OF_TRAINS && changed; train++)
         {
             changed = false;
-            for (int i = 0; i < wrongLabelsCnt.length; i++)
-                wrongLabelsCnt[i] = 0;
+/*            for (int i = 0; i < wrongLabelsCnt.length; i++)
+                wrongLabelsCnt[i] = 0;*/
             int wrongCnt = 0;
             for (int image = 0; image < numberOfImages; image++)
             {
-                Label decidedLabel = decideLabel(factorsList[image]);
+                maxImageIndex = Math.max(maxImageIndex, image);
+                Label decidedLabel = decideLabel(image);
                 if (decidedLabel.ordinal() != labels[image])
                 {
                     wrongCnt++;
-                    wrongLabelsCnt[decidedLabel.ordinal()]++;
+//                    wrongLabelsCnt[decidedLabel.ordinal()]++;
                     changed = true;
-                    addToWeight(decidedLabel.ordinal(), factorsList[image].getFactors(), -1);
-                    addToWeight(labels[image], factorsList[image].getFactors(), 1);
+                    updateWeights(image, decidedLabel);
                 }
+                if (image %10 == 0 )
+                    System.out.println(image);
             }
             System.out.println("Wrong decisions: " + wrongCnt);
             /*for (int i = 0; i < wrongLabelsCnt.length; i++)
@@ -86,8 +96,14 @@ public class Perceptron extends Classifier {
         }
     }
 
+    protected void updateWeights(int image, Label decidedLabel) {
+
+        addToWeight(decidedLabel.ordinal(), factorsList[image].getFactors(), -1);
+        addToWeight(labels[image], factorsList[image].getFactors(), 1);
+    }
+
     // adds factor array multiplicated by coefficient to weight of the specified label.
-    private void addToWeight(int label, double[] factors, int coeff) {
+    protected void addToWeight(int label, double[] factors, int coeff) {
         for (int i = 0; i < Factors.NUMBER_OF_FACTORS; i++)
             weight.get(label)[i] += coeff * factors[i];
     }
