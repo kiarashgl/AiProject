@@ -35,27 +35,27 @@ public class Main {
 
 
 
-        KernelizedPerceptron kp = new KernelizedPerceptron(trainLabels, trainImages);
-        kp.train();
-        kp.printWeightsToFile(TRAIN_DATA_KERNEL);
-        kp = new KernelizedPerceptron(TRAIN_DATA_KERNEL);
-        int[] testLabels = MnistReader.getLabels(TEST_LABELS_ADDRESS);
-        List<int[][]> testImages = MnistReader.getImages(TEST_IMAGES_ADDRESS);
-        int wrongDecisions = 0;
-        for (int i = 0; i < testImages.size(); i++)
-        {
-            int[][] image = testImages.get(i);
-            Label decidedLabel = kp.test(image);
-            if (decidedLabel.ordinal() != testLabels[i])
-                wrongDecisions++;
-        }
-        System.out.println("Wrong decisions: " + wrongDecisions);
+//        KernelizedPerceptron kp = new KernelizedPerceptron(trainLabels, trainImages);
+//        kp.train();
+//        kp.printWeightsToFile(TRAIN_DATA_KERNEL);
+//        kp = new KernelizedPerceptron(TRAIN_DATA_KERNEL);
+//        int[] testLabels = MnistReader.getLabels(TEST_LABELS_ADDRESS);
+//        List<int[][]> testImages = MnistReader.getImages(TEST_IMAGES_ADDRESS);
+//        int wrongDecisions = 0;
+//        for (int i = 0; i < testImages.size(); i++)
+//        {
+//            int[][] image = testImages.get(i);
+//            Label decidedLabel = kp.test(image);
+//            if (decidedLabel.ordinal() != testLabels[i])
+//                wrongDecisions++;
+//        }
+//        System.out.println("Wrong decisions: " + wrongDecisions);
 
 
 //        Mira mira = new Mira(trainLabels,trainImages);
 //        mira.train();
 //        mira.printWeightsToFile(TRAIN_DATA_MIRA);
-    /*    Mira mira = new Mira(TRAIN_DATA_MIRA);
+        Mira mira = new Mira(TRAIN_DATA_MIRA);
         int[] testLabels = MnistReader.getLabels(TEST_LABELS_ADDRESS);
         List<int[][]> testImages = MnistReader.getImages(TEST_IMAGES_ADDRESS);
         int wrongDecisions = 0;
@@ -67,6 +67,5 @@ public class Main {
                 wrongDecisions++;
         }
         System.out.println("Wrong decisions: " + wrongDecisions);
-*/
     }
 }

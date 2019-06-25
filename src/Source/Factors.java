@@ -15,7 +15,7 @@ public class Factors {
     }
 
     // FIXME: Change this parameter when changing factors; otherwise it doesn't work properly.
-    public static final int NUMBER_OF_FACTORS = 28*28 + 1;
+    public static final int NUMBER_OF_FACTORS = 28*28 + 8 + 1;
     private float[] factors = new float[NUMBER_OF_FACTORS];
     private int[][] image;
     private int height, width;
@@ -43,24 +43,24 @@ public class Factors {
                 factors[index++] = sum / division;
             }
 
-//        result = leftRightRatio();
-//        factors[index++] = result;
-//        result = colorChange();
-//        factors[index++] = result;
-//
-//        result = heightwidthRatio();
-//        factors[index++] = result;
-//        result = hasMoreBackgroundPixels();
-//        factors[index++] = result;
-//        result = backgroundColorNumber();
-//        factors[index++] = result;
-//
-//        result = topBottomRatio();
-//        factors[index++] = result;
-//        result = ratioOfPixelsUnderSecondaryDiagonal();
-//        factors[index++] = result;
-//        result = numberOfRings();
-//        factors[index++] = result;
+        result = leftRightRatio();
+        factors[index++] = result;
+        result = colorChange();
+        factors[index++] = result;
+
+        result = heightwidthRatio();
+        factors[index++] = result;
+        result = hasMoreBackgroundPixels();
+        factors[index++] = result;
+        result = backgroundColorNumber();
+        factors[index++] = result;
+
+        result = topBottomRatio();
+        factors[index++] = result;
+        result = ratioOfPixelsUnderSecondaryDiagonal();
+        factors[index++] = result;
+        result = numberOfRings();
+        factors[index++] = result;
     }
 
     public float[] getFactors() {
@@ -119,12 +119,12 @@ public class Factors {
         int start = height / 3, end = 2 * height / 3 , sum = 0;
         for (int i = start; i <= end; i++)
             for (int j = 0; j < width; ){
-                while (image[i][j] > 0)
+                while (j < 28 && image[i][j] > 0)
                     j++;
 
-                if (image[i][j] == 0){
+                if (j < 28 && image[i][j] == 0){
                     sum++;
-                    while (image[i][j] == 0)
+                    while (j < 28 && image[i][j] == 0)
                         j++;
                 }
 
