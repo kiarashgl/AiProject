@@ -5,10 +5,6 @@ import java.util.List;
 public class Mira extends Perceptron {
 
 
-    protected int numberOfImages = 60000;
-    protected int maxImageIndex = 0;
-    private static final int NUMBER_OF_TRAINS = 100000;
-
 
     public Mira(int[] labels, List<int[][]> images) {
         super(labels, images);
@@ -18,10 +14,6 @@ public class Mira extends Perceptron {
         super(trainData);
     }
 
-    {
-        for (int i = 0; i < Label.values().length; i++)
-            weight.add(new float[Factors.NUMBER_OF_FACTORS]);
-    }
 
     @Override
     protected void updateWeights(int image, Label decidedLabel) {
