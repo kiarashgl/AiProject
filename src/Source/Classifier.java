@@ -29,6 +29,11 @@ public abstract class Classifier {
         assert scanner != null;
         // Here I tried to read the input train data file properly :)
         int weightCnt = Integer.parseInt(scanner.nextLine());
+        if (weight.size() == 0)
+        {
+            for (int i = 0; i < Label.values().length; i++)
+                weight.add(new float[Factors.NUMBER_OF_FACTORS]);
+        }
         for (int i = 0; i < weightCnt; i++)
         {
             int weightInd = Integer.parseInt(scanner.nextLine().trim().split(" ")[1]);

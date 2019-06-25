@@ -23,15 +23,15 @@ public class Mira extends Perceptron {
         addToWeight(labels[image], factorsList[image].getFactors(), tau);
     }
 
-    protected void addToWeight(int label, float[] factors, double tau) {
+    protected void addToWeight(int label, float[] factors, float tau) {
         for (int i = 0; i < Factors.NUMBER_OF_FACTORS; i++)
             weight.get(label)[i] += tau * factors[i];
     }
 
     protected Float getTau(int decidedLabel , int actualLabel ,int image ){
         float tau;
-        final float maxUpdate = 10;
-        //TODO ?????
+        final float maxUpdate = 0.5f;
+        //TODO: Change this number
 
         float[] w = new float[Factors.NUMBER_OF_FACTORS];
 

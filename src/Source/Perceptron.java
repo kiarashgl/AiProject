@@ -6,7 +6,7 @@ public class Perceptron extends Classifier {
     protected int numberOfImages = 60000;
     protected Factors[] factorsList = new Factors[numberOfImages];
     protected int maxImageIndex = 0;
-    protected static final int NUMBER_OF_TRAINS = 100;
+    protected static final int NUMBER_OF_TRAINS = 10000;
 
 
     public Perceptron(int[] labels, List<int[][]> images) {
