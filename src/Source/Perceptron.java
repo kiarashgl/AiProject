@@ -3,10 +3,10 @@ package Source;
 import java.util.List;
 
 public class Perceptron extends Classifier {
-    protected int numberOfImages = 60000;
+    protected int numberOfImages = 10000;
     protected Factors[] factorsList = new Factors[numberOfImages];
     protected int maxImageIndex = 0;
-    protected static final int NUMBER_OF_TRAINS = 10000;
+    protected static final int NUMBER_OF_TRAINS = 2;
 
 
     public Perceptron(int[] labels, List<int[][]> images) {
@@ -25,6 +25,9 @@ public class Perceptron extends Classifier {
 
     public Perceptron(String trainData) {
         super(trainData);
+    }
+
+    public Perceptron() {
     }
 
     protected Label decideLabel(Factors factors) {
@@ -79,8 +82,8 @@ public class Perceptron extends Classifier {
                     changed = true;
                     updateWeights(image, decidedLabel);
                 }
-//                if (image %1000 == 0 )
-//                    System.out.println(image);
+                if (image %1000 == 0 )
+                    System.out.println(image);
             }
             System.out.println("Wrong decisions: " + wrongCnt);
             /*for (int i = 0; i < wrongLabelsCnt.length; i++)

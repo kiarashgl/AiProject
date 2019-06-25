@@ -47,6 +47,9 @@ public abstract class Classifier {
 
     }
 
+    public Classifier() {
+    }
+
     abstract public void train();
 
     abstract public Label test(int[][] image);
