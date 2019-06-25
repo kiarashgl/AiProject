@@ -79,8 +79,8 @@ public class Perceptron extends Classifier {
                     changed = true;
                     updateWeights(image, decidedLabel);
                 }
-                if (image %1000 == 0 )
-                    System.out.println(image);
+//                if (image %1000 == 0 )
+//                    System.out.println(image);
             }
             System.out.println("Wrong decisions: " + wrongCnt);
             /*for (int i = 0; i < wrongLabelsCnt.length; i++)
