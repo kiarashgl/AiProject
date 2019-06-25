@@ -3,7 +3,8 @@ package Source;
 import java.util.List;
 
 public class Main {
-    private final static String PROJECT_ROOT = "C:/Users/Kiarash/Desktop/AI/AiProject";
+//    /Users/mahsa_shv/Desktop/AiProject/src/Resource/Test/t10k-images-idx3-ubyte
+    private final static String PROJECT_ROOT = "/Users/mahsa_shv/Desktop/AiProject";
     private final static String TRAIN_LABELS_ADDRESS = PROJECT_ROOT + "/src/Resource/Train/train-labels-idx1-ubyte";
     private final static String TRAIN_IMAGES_ADDRESS = PROJECT_ROOT + "/src/Resource/Train/train-images-idx3-ubyte";
     private final static String TEST_LABELS_ADDRESS = PROJECT_ROOT + "/src/Resource/Test/t10k-labels-idx1-ubyte";
@@ -28,7 +29,13 @@ public class Main {
 //                wrongDecisions++;
 //        }
 //        System.out.println("Wrong decisions: " + wrongDecisions);
-        KernelizedPerceptron kp = new KernelizedPerceptron(trainLabels, trainImages);
-        kp.train();
+
+
+
+//        KernelizedPerceptron kp = new KernelizedPerceptron(trainLabels, trainImages);
+//        kp.train();
+
+        Mira mira = new Mira(trainLabels,trainImages);
+        mira.train();
     }
 }
