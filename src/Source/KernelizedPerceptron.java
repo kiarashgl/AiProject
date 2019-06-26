@@ -20,8 +20,8 @@ public class KernelizedPerceptron extends Perceptron {
 
 
 
-    private float kernel(int iFactorIndex, int testFactorIndex) {
-        float ret = 0;
+    private double kernel(int iFactorIndex, int testFactorIndex) {
+        double ret = 0;
         float[] iFactorFloat = factorsList[iFactorIndex].getFactors(),
                 testFactorFloat = factorsList[testFactorIndex].getFactors();
         for (int i = 0; i < Factors.NUMBER_OF_FACTORS; i++)
@@ -30,8 +30,47 @@ public class KernelizedPerceptron extends Perceptron {
     }
 
     @Override
+    public Label test(int[][] image) {
+        Factors factors = new Factors(image);
+        return decideLabel(factors);
+    }
+
+    private double kernel(int iFactorIndex, Factors test) {
+        double ret = 0;
+        float[] iFactorFloat = factorsList[iFactorIndex].getFactors(),
+                testFactorFloat = test.getFactors();
+        for (int i = 0; i < Factors.NUMBER_OF_FACTORS; i++)
+            ret += iFactorFloat[i] * testFactorFloat[i];
+        return (ret + 1) * (ret + 1);
+    }
+    @Override
+    protected Label decideLabel(Factors factors) {
+        double maxDotProduct = 0, dotProduct = 0;
+        Label ret = null;
+        boolean first = true;
+
+        for (Label label : Label.values())
+        {
+            dotProduct = 0;
+            for (int image = 0; image <= maxImageIndex; image++)
+            {
+                float alpha = weight.get(label.ordinal())[image];
+                if (alpha != 0)
+                    dotProduct += weight.get(label.ordinal())[image] * kernel(image, factors);
+            }
+            if (first || dotProduct > maxDotProduct)
+            {
+                maxDotProduct = dotProduct;
+                ret = label;
+            }
+            first = false;
+        }
+        return ret;
+    }
+
+    @Override
     protected Label decideLabel(int factorsIndex) {
-        float maxDotProduct = 0, dotProduct = 0;
+        double maxDotProduct = 0, dotProduct = 0;
         Label ret = null;
         boolean first = true;
 
@@ -87,9 +126,8 @@ public class KernelizedPerceptron extends Perceptron {
         printWriter.flush();
         printWriter.close();
     }
-
-    public KernelizedPerceptron(String trainData) {
-        super();
+    void loadWeightsFromFile(String trainData)
+    {
         File trainDataFile = new File(trainData);
         Scanner scanner = null;
         try
@@ -117,7 +155,11 @@ public class KernelizedPerceptron extends Perceptron {
             }
             scanner.nextLine();
         }
-
+        System.out.println("salam");
+    }
+    public KernelizedPerceptron(String trainData) {
+        super();
+        loadWeightsFromFile(trainData);
     }
 
 

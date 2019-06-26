@@ -14,11 +14,12 @@ public class Main {
 
     public static void testP()
     {
-        KernelizedPerceptron testPerceptron = new KernelizedPerceptron(TRAIN_DATA);
         int[] testLabels = MnistReader.getLabels(TEST_LABELS_ADDRESS);
         List<int[][]> testImages = MnistReader.getImages(TEST_IMAGES_ADDRESS);
+        KernelizedPerceptron testPerceptron = new KernelizedPerceptron(testLabels, testImages);
+        testPerceptron.loadWeightsFromFile(TRAIN_DATA);
         int wrongDecisions = 0;
-        for (int i = 0; i < testImages.size(); i++)
+        for (int i = 0; i < /*testImages.size()*/1000; i++)
         {
             int[][] image = testImages.get(i);
             Label decidedLabel = testPerceptron.test(image);
@@ -33,25 +34,26 @@ public class Main {
         List<int[][]> trainImages = MnistReader.getImages(TRAIN_IMAGES_ADDRESS);
         KernelizedPerceptron perceptron = new KernelizedPerceptron(trainLabels, trainImages);
         perceptron.train();
+//
 
 
 
+//        KernelizedPerceptron kp = new KernelizedPerceptron(TRAIN_DATA);
 
-//        KernelizedPerceptron kp = new KernelizedPerceptron(trainLabels, trainImages);
 //        kp.train();
 //        kp.printWeightsToFile(TRAIN_DATA_KERNEL);
 //        kp = new KernelizedPerceptron(TRAIN_DATA_KERNEL);
-//        int[] testLabels = MnistReader.getLabels(TEST_LABELS_ADDRESS);
-//        List<int[][]> testImages = MnistReader.getImages(TEST_IMAGES_ADDRESS);
-//        int wrongDecisions = 0;
-//        for (int i = 0; i < testImages.size(); i++)
-//        {
-//            int[][] image = testImages.get(i);
-//            Label decidedLabel = kp.test(image);
-//            if (decidedLabel.ordinal() != testLabels[i])
-//                wrongDecisions++;
-//        }
-//        System.out.println("Wrong decisions: " + wrongDecisions);
+        int[] testLabels = MnistReader.getLabels(TEST_LABELS_ADDRESS);
+        List<int[][]> testImages = MnistReader.getImages(TEST_IMAGES_ADDRESS);
+        int wrongDecisions = 0;
+        for (int i = 0; i < testImages.size(); i++)
+        {
+            int[][] image = testImages.get(i);
+            Label decidedLabel = perceptron.test(image);
+            if (decidedLabel.ordinal() != testLabels[i])
+                wrongDecisions++;
+        }
+        System.out.println("Wrong decisions: " + wrongDecisions);
 
 
         /*Mira mira = new Mira(trainLabels,trainImages);
