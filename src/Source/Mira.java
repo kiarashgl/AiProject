@@ -30,7 +30,7 @@ public class Mira extends Perceptron {
 
     protected Float getTau(int decidedLabel , int actualLabel ,int image ){
         float tau;
-        final float maxUpdate = 0.5f;
+        final float maxUpdate = 0.7f;
         //TODO: Change this number
 
         float[] w = new float[Factors.NUMBER_OF_FACTORS];

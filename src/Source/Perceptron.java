@@ -3,10 +3,10 @@ package Source;
 import java.util.List;
 
 public class Perceptron extends Classifier {
-    protected int numberOfImages = 60000;
+    protected int heldOutCnt = 100, numberOfImages = 60000 - heldOutCnt ;
     protected Factors[] factorsList = new Factors[numberOfImages];
     protected int maxImageIndex = 0;
-    protected static final int NUMBER_OF_TRAINS = 200;
+    protected static final int NUMBER_OF_TRAINS = 3;
 
 
     public Perceptron(int[] labels, List<int[][]> images) {
@@ -59,7 +59,19 @@ public class Perceptron extends Classifier {
         Factors factors = new Factors(image);
         return decideLabel(factors);
     }
+    protected void testHeldOut()
+    {
+        int wrongDecisions = 0;
+        for (int i = numberOfImages; i < numberOfImages + heldOutCnt; i++)
+        {
+            int[][] image = images.get(i);
+            Label decidedLabel = this.test(image);
+            if (decidedLabel.ordinal() != labels[i])
+                wrongDecisions++;
+        }
+        System.out.println("Held Out Wrong decisions: " + wrongDecisions);
 
+    }
     @Override
     public void train() {
 //        int[] wrongLabelsCnt = new int[10];
@@ -82,10 +94,13 @@ public class Perceptron extends Classifier {
                     changed = true;
                     updateWeights(image, decidedLabel);
                 }
-//                if (image %1000 == 0 )
-//                    System.out.println(image);
+                if (image %1000 == 0 )
+                    System.out.println(image);
             }
-            System.out.println("Wrong decisions: " + wrongCnt);
+            System.out.println("Train #"+train+" Wrong decisions: " + wrongCnt);
+            printWeightsToFile(Main.TRAIN_DATA);
+            testHeldOut();
+            Main.testP();
             /*for (int i = 0; i < wrongLabelsCnt.length; i++)
                 System.out.println("label " + i + " wrongs :" + wrongLabelsCnt[i]);*/
 
