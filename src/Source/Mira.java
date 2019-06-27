@@ -17,33 +17,33 @@ public class Mira extends Perceptron {
 
     @Override
     protected void updateWeights(int image, Label decidedLabel) {
-        float tau = getTau(decidedLabel.ordinal() , labels[image], image);
+        double tau = getTau(decidedLabel.ordinal() , labels[image], image);
 
         addToWeight(decidedLabel.ordinal(), factorsList[image].getFactors(), -tau);
         addToWeight(labels[image], factorsList[image].getFactors(), tau);
     }
 
-    protected void addToWeight(int label, float[] factors, float tau) {
+    protected void addToWeight(int label, double[] factors, double tau) {
         for (int i = 0; i < Factors.NUMBER_OF_FACTORS; i++)
             weight.get(label)[i] += tau * factors[i];
     }
 
-    protected Float getTau(int decidedLabel , int actualLabel ,int image ){
-        float tau;
-        final float maxUpdate = 0.7f;
+    protected Double getTau(int decidedLabel , int actualLabel ,int image ){
+        double tau;
+        final double maxUpdate = 0.7f;
         //TODO: Change this number
 
-        float[] w = new float[Factors.NUMBER_OF_FACTORS];
+        double[] w = new double[Factors.NUMBER_OF_FACTORS];
 
         for (int i = 0; i < Factors.NUMBER_OF_FACTORS; i++)
             w[i] = weight.get(decidedLabel)[i] - weight.get(actualLabel)[i];
 
-        float dotProduct1 = 0;
+        double dotProduct1 = 0;
         for (int i = 0; i < Factors.NUMBER_OF_FACTORS; i++)
             dotProduct1 += w[i] * factorsList[image].getFactors()[i];
         dotProduct1 ++;
 
-        float dotProduct2 = 0;
+        double dotProduct2 = 0;
         for (int i = 0; i < Factors.NUMBER_OF_FACTORS; i++)
             dotProduct2 += factorsList[image].getFactors()[i] * factorsList[image].getFactors()[i];
         dotProduct2 *= 2;

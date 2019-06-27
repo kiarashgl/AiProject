@@ -3,8 +3,6 @@ package Source;
 import java.util.List;
 
 public class Perceptron extends Classifier {
-    protected int heldOutCnt = 0, numberOfImages = 6000 - heldOutCnt ;
-    protected Factors[] factorsList = new Factors[numberOfImages];
     protected int maxImageIndex = 0;
     protected static final int NUMBER_OF_TRAINS = 10;
 
@@ -17,10 +15,11 @@ public class Perceptron extends Classifier {
             factorsList[image] = new Factors(images.get(image));
             factorsList[image].getFactors();
         }
+//        normalize();
     }
     {
         for (int i = 0; i < Label.values().length; i++)
-            weight.add(new float[Factors.NUMBER_OF_FACTORS]);
+            weight.add(new double[Factors.NUMBER_OF_FACTORS]);
     }
 
     public Perceptron(String trainData) {
@@ -31,16 +30,16 @@ public class Perceptron extends Classifier {
     }
 
     protected Label decideLabel(Factors factors) {
-        float maxDotProduct = 0, dotProduct = 0;
+        double maxDotProduct = 0, dotProduct = 0;
         Label ret = null;
         boolean first = true;
-        float[] floatFactors = factors.getFactors();
+        double[] doubleFactors = factors.getFactors();
 
         for (Label label : Label.values())
         {
             dotProduct = 0;
             for (int i = 0; i < Factors.NUMBER_OF_FACTORS; i++)
-                dotProduct += weight.get(label.ordinal())[i] * floatFactors[i];
+                dotProduct += weight.get(label.ordinal())[i] * doubleFactors[i];
             if (first || dotProduct > maxDotProduct)
             {
                 maxDotProduct = dotProduct;
@@ -57,6 +56,7 @@ public class Perceptron extends Classifier {
     @Override
     public Label test(int[][] image) {
         Factors factors = new Factors(image);
+//        factors.normalize(mean, minValue, maxValue);
         return decideLabel(factors);
     }
     protected void testHeldOut()
@@ -121,7 +121,7 @@ public class Perceptron extends Classifier {
     }
 
     // adds factor array multiplicated by coefficient to weight of the specified label.
-    protected void addToWeight(int label, float[] factors, int coeff) {
+    protected void addToWeight(int label, double[] factors, int coeff) {
         for (int i = 0; i < Factors.NUMBER_OF_FACTORS; i++)
             weight.get(label)[i] += coeff * factors[i];
     }

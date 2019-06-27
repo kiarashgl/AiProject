@@ -9,7 +9,12 @@ import java.util.Scanner;
 public abstract class Classifier {
     protected int[] labels;
     protected List<int[][]> images = new LinkedList<>();
-    protected ArrayList<float[]> weight = new ArrayList<>();
+    protected ArrayList<double[]> weight = new ArrayList<>();
+    protected double[] mean = new double[Factors.NUMBER_OF_FACTORS], minValue = new double[Factors.NUMBER_OF_FACTORS],
+        maxValue = new double[Factors.NUMBER_OF_FACTORS];
+    protected int heldOutCnt = 0;
+    protected int numberOfImages = 60000 - heldOutCnt ;
+    protected Factors[] factorsList = new Factors[numberOfImages];
 
     public Classifier(int[] labels, List<int[][]> images) {
         this.labels = labels;
@@ -32,24 +37,50 @@ public abstract class Classifier {
         if (weight.size() == 0)
         {
             for (int i = 0; i < Label.values().length; i++)
-                weight.add(new float[Factors.NUMBER_OF_FACTORS]);
+                weight.add(new double[Factors.NUMBER_OF_FACTORS]);
         }
         for (int i = 0; i < weightCnt; i++)
         {
             int weightInd = Integer.parseInt(scanner.nextLine().trim().split(" ")[1]);
             for (int j = 0; j < Factors.NUMBER_OF_FACTORS; j++)
             {
-                float weightParameter = Float.parseFloat(scanner.next());
+                double weightParameter = Double.parseDouble(scanner.next());
                 weight.get(weightInd)[j] = weightParameter;
             }
             scanner.nextLine();
         }
-
+        for (int i = 0; i < Factors.NUMBER_OF_FACTORS; i++)
+        {
+            mean[i] = Double.parseDouble(scanner.next());
+            minValue[i] = Double.parseDouble(scanner.next());
+            maxValue[i] = Double.parseDouble(scanner.next());
+        }
     }
 
     public Classifier() {
     }
-
+    void normalize()
+    {
+        for (int i = 0; i < Factors.NUMBER_OF_FACTORS; i++)
+        {
+            maxValue[i] = Double.MIN_VALUE;
+            minValue[i] = Double.MAX_VALUE;
+        }
+        for (Factors factors : factorsList)
+        {
+            double[] factorList = factors.getFactors();
+            for (int i = 0; i < Factors.NUMBER_OF_FACTORS; i++)
+            {
+                mean[i] += factorList[i];
+                maxValue[i] = (factorList[i] > maxValue[i] ? factorList[i] : maxValue[i]);
+                minValue[i] = (factorList[i] < minValue[i] ? factorList[i] : minValue[i]);
+            }
+        }
+        for (int i = 0; i < mean.length; i++)
+            mean[i] /= numberOfImages;
+        for (Factors factors : factorsList)
+            factors.normalize(mean, minValue, maxValue);
+    }
     abstract public void train();
 
     abstract public Label test(int[][] image);
@@ -57,7 +88,7 @@ public abstract class Classifier {
     public void printWeights() {
         for (int i = 0; i < weight.size(); i++)
         {
-            float[] factors = weight.get(i);
+            double[] factors = weight.get(i);
             System.out.printf("Factor #%d :\n", i);
             for (int ind = 0; ind < factors.length; ind++)
                 System.out.println("factor " + ind + " = " + factors[ind]);
@@ -77,12 +108,14 @@ public abstract class Classifier {
         printWriter.println(weight.size());
         for (int i = 0; i < weight.size(); i++)
         {
-            float[] factors = weight.get(i);
+            double[] factors = weight.get(i);
             printWriter.printf("Factor %d :\n", i);
-            for (float factor : factors)
+            for (double factor : factors)
                 printWriter.print(factor + " ");
             printWriter.println();
         }
+        for (int i = 0; i < Factors.NUMBER_OF_FACTORS; i++)
+            printWriter.println(mean[i] + " " + minValue[i] + " " + maxValue[i]);
         printWriter.flush();
         printWriter.close();
     }
